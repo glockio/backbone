@@ -1,5 +1,8 @@
 BackboneMin::Application.routes.draw do
   get "readings/index"
+
+  resources :readings
+  root "readings#index"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

@@ -1,6 +1,6 @@
 #= namespace
 #= require jquery
-#= require underscore_development
+#= require underscore
 #= require backbone
 #= require namespace
 #= require_tree ./models
@@ -8,3 +8,10 @@
 #= require_tree ./templates
 #= require_tree ./views
 #= require_self
+
+
+ class App.ReadingRouter extends Backbone.Router
+
+  initialize: -> 
+    readingView= new App.ReadingView
+
