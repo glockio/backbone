@@ -1,6 +1,7 @@
 class App.ReadingModel extends Backbone.Model
 
- urlRoot: '/readings'
+  urlRoot: '/readings'
+
 
 
 
