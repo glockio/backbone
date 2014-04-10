@@ -1,5 +1,6 @@
 #= namespace
 #= require jquery
+#= require jquery_ujs
 #= require underscore
 #= require backbone
 #= require namespace
@@ -13,5 +14,6 @@
  class App.ReadingRouter extends Backbone.Router
 
   initialize: -> 
+    
     readingView= new App.ReadingView
 
