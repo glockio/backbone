@@ -1,0 +1,10 @@
+#= namespace
+#= require jquery
+#= require underscore_development
+#= require backbone
+#= require namespace
+#= require_tree ./models
+#= require_tree ./collections
+#= require_tree ./templates
+#= require_tree ./views
+#= require_self
