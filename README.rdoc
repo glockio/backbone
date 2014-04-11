@@ -65,10 +65,134 @@ user.get('name') #=> will return Greg
 class UserModel 
   urlRoot: '/users'  # The Eqlivent of a Rails App resoruce 
 
+
+# Console Session 
 userInstance= new UserModel(id:1) # this will create a new instance model that holds information from user 1... But it is not populated yet...
 userInstance.fetch() #=> Much better.. now we have a Populated JSON object  with GET USER/1
 userInstance.get('name') #=> "Greg"
 userInstance.set(name:"Changed")
 userInstance.save() #=> Sends information back to DB 
+userInstance.get('id') #=> If the user was successfuly saved to the DB then they will have an ID, else ID will be nil 
 
+save_me_here= userInstance.toJSON() #=> This will stroe the user Instance JSON in the defined var "save_me_here"
+
+userInstance.destory() #-> Obvi kills off any user DELETE/user/2
+userInstance.get('id') #Should now error out 
+
+
+## Createing a User
+  user= new UserModel(name: "Save me")
+  user.save #=> submits a post request which by default in rails is handled by create controller ** need rootURl Defined in Model Class
+
+
+# Model Layer Defaults Events 
+  class UserModel extends Backbone.Model 
+    defaults:
+      name: "No Name was set so we will put this here by default"
+
+
+
+userInstance.on('event-name', someFunction) #Use listenTO over .on because listenTo is like destory vs delete. Listen to will take away event listens whern view is removed
+                                            # These events would be defined in the view with this.model.on @.model.on
+userIstance.trigger('event-name')
+
+# MODEL EVENTS 
+ 'change'
+ change:attr
+ destroy
+ sync
+ error
+ all #any event is triggerd 
+
+ userInstance.off('event-name', someFunction)
+ userIstance.set(name:'change name', silent:ture ) #set attr without triggering an event
+
+
+    #**************************#
+    #****** Level 3 Views *****#
+    #**************************#
+
+
+class UserView extends Backbone.View 
+userView= new UserView 
+console.log(userView.el) #=> <div></div> this is the tagName 
+
+
+class UserView
+  tagName: "li"
+  id: "user-view"
+  className: "users-view" # all of this will change the userView.el 
+
+$('#user-view').html() == $(todoView.el).html() == todoView.$el(html)
+
+#Useing Templates
+class UserView
+    template: JST['template/index']
+    render: -> 
+      attrs= @.model.toJSON #=> will render all attribtes 
+      this.$el.html(this.template(attributes))== @.$el.html(@template(attrs)) # this will pass content to template you can then call diff attrs in the template
+                                                     # for example <%= name %> or <%= age %> would all be avaliable in the template if entire JSON object is pased 
+#DOM events in views
+class UserView
+  event:
+    'click h3' :'someFunction' #this event is scoped to the view so any h3 clicked on page outside template will not fire! 
+    'dblick' :'someThing' # no elemet specifed will apply to entire view 
+
+  someThing: -> 
+    alert(@.model.get('title')) #gets the title from the model assoicated with this view 
+
+
+
+
+    #**************************#
+    #**Level 4 Models & Views*#
+    #**************************#
+
+
+
+#Updateing Model when View Changes 
+   
+  class UserView 
+    events: 
+      'change input': 'toggleStatus'
+    toggleStatus: -> 
+      if @model.get('status')==='pending'   # this is alot of model logic in View and can be refactored! 
+        @.model.set(status: 'approved')
+      else 
+        @.model.set(status:"pending")
+
+  ## Refactor OF above
+    toggleStatus: -> 
+      @.model.toggleStatus() #calls model function 
+
+  class UserModel
+
+    toggleStatus: -> 
+      if @.get('status')=='approved'   #this keeps model logic in model! 
+          @.set(status:'approved')
+      else @.set(status:'pending')
+      @.save();
+
+      #If you only call render at end of toggleStatus and update the dom when view is changed. it does not account for the possibilty of updateing that model 
+      # attr somewhere else in your app. Therefore it is best to put your model listeners in your model but in the views like so...
+
+   class UserView
+
+      initialize: -> 
+        @.model.on('change', @.render, @) #thrid this required to specify context 
+        #QUESTION HOW TO KNOW WHEN TO US@E THE THRID THIS???
+        @.model.on('destory', @.remove, @)
+      remove: -> 
+        @.$el.remove()
+
+      render: -> 
+
+
+
+    #**************************#
+    #**Level 5 Collections*****#
+    #**************************#
+
+    class UserCollection extendsBackbone.Collection
+        model :UserModel
 
