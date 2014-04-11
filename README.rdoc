@@ -194,5 +194,27 @@ class UserView
     #**************************#
 
     class UserCollection extendsBackbone.Collection
-        model :UserModel
+        model :UserModel # this is required 
+
+    userCollection= new UserCollection()
+
+    # collection instance methods 
+    .length # returns number of models in collection
+    .add(userCollection)
+    .at(0) #=> returns first
+    .get(1) #=> returns instance by id  
+    .remove(userCollection) #removes an instance
+    userArray= [{name: "user 2"}, {name: "user2"}, {name: "user3"}]
+    .userCollection.reset(useArray)  #reset will add each item in an array 
+
+
+  # POPULATEING A COLLECTION VIA SERVER 
+
+    class UserCollection
+      url: '/users'
+    userCollection.fetch() #=> Get/users
+
+    #COLLECTION EVENTS
+      userCollection.on('reset', doThing) # reset fires anytime tecth or reset it called! 
+
 
