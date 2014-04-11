@@ -215,6 +215,15 @@ class UserView
     userCollection.fetch() #=> Get/users
 
     #COLLECTION EVENTS
-      userCollection.on('reset', doThing) # reset fires anytime tecth or reset it called! 
+    userCollection.on('reset', doThing) # reset fires anytime tecth or reset it called! 
+
+    #You Can init a collection with the init of the View! 
+
+    class UserView
+      initialize: -> 
+        startCollection()
+
+      startCollection: -> 
+        userCollection= new UserCollection(model : userModel)
 
 
