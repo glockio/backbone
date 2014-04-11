@@ -194,7 +194,8 @@ class UserView
     #**************************#
 
     class UserCollection extendsBackbone.Collection
-        model :UserModel # this is required 
+        model :UserModel # this is required it is the MODEL CLASS
+        url: '/users' 
 
     userCollection= new UserCollection()
 
@@ -212,10 +213,29 @@ class UserView
 
     class UserCollection
       url: '/users'
-    userCollection.fetch() #=> Get/users
+    userCollection.fetch() #=> Get/users. This makes a get request to users#index and will return 
 
     #COLLECTION EVENTS
     userCollection.on('reset', doThing) # reset fires anytime tecth or reset it called! 
+    userCollection.on('add', doThing(userModel)) #> both add and remove take an argument 
+    userCollection.on('remove', doThing(userModel))
+
+    userCollection.fetch(silent:true ) #will not trigger event listenr for reset 
+    uuserCollection.off('rest', doThing) 
+
+    #Model Events In a collection
+    .change
+    .change:attr
+    .destroy
+    .sync
+    .all 
+
+    Iteration
+    .map (user) ->  #new mutated array 
+    userCollection.filter (x) ->  #new array with only items that return ture
+      x.get('name')==Greg
+    userCollection.forEach (x) -> 
+
 
     #You Can init a collection with the init of the View! 
 
@@ -225,5 +245,79 @@ class UserView
 
       startCollection: -> 
         userCollection= new UserCollection(model : userModel)
+
+    #InputWAY of userCollection.fetch()
+      1) this makes a get request to 'users#index',  the index controller looks like the following
+        def index 
+          @users=User.all 
+            respond_to do |format|
+              format.json {}  # This formation Json looks for a index.rabl file( from the rabl Gem) in users viwes(rails)
+            end
+        end
+      2) in the Rabl file you specify the json you would like to parse to the page with the follwoing syntax
+          collection @users
+          attributes :id, :name 
+
+
+    #*******************************#
+    #**Level 6 Collections & Viwes**#
+    #*******************************#
+
+  #model instance and view instance has one to one realationship
+
+  # a colllection view has many views through models. In other words, a collection view does not render any
+  # of its own html. It delgates to each model which then call its own view 
+
+  class UsersView extends Backbone.View
+
+  usersView= new UsersView(collection: usersCollection)  #.collection now ref usersCollection
+
+
+  class UsersView 
+
+    initalize: -> 
+      @render()
+
+    render: -> 
+      @.collection.forEach (user) =>  #use of Fat Arrow to provide correct context `
+        userView= new UserView(model: userInstance)
+        @.$el.append(userView.render().el)  #calls the render() function on the userInstance View 
+
+  # Example of Collection Views 
+    @collection.each (model) => addOne(@)
+
+    addOne:(this)->
+      todo = new TodoView( model: model)
+      this.$el.append todo
+
+
+      a =[1,23,4,5]
+
+      _.each a, (n)=>
+        console.log n
+
+      _(a).each (n) =>
+        console.log n  
+  # removeing an item from a collection does not destroy the item
+
+  how to remove steps 
+  class UsersCollection
+    initialize: -> 
+      @.on('remove', @.hideModel)
+    hideModel: (model) ->
+      model.triger('hide')
+
+  class UserView
+    initialize: -> 
+      @.model.on('hide', @.remove, @)
+
+
+
+#Input List Steps 
+1) create new instance of viewCollection in router pass in collection: App.ReadingCollection
+2) On init of view create new instance of ReadingCollection passing in model: UserModel
+
+3) on init of ReadingsCollection call this.fetch()  #=> Populates the collection
+
 
 

@@ -16,4 +16,5 @@
   initialize: -> 
     
     readingView= new App.ReadingView
+    readingsView = new App.ReadingsView(collection: App.ReadingsCollection)
 

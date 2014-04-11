@@ -2,7 +2,11 @@ class ReadingsController < ApplicationController
   # respond_to :json
 
   def index
-
+    @readings = Reading.all  
+    respond_to do |format|
+      format.json {}
+      format.html
+    end
   end
 
   def create 
