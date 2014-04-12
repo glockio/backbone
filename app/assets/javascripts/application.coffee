@@ -13,8 +13,6 @@
 
  class App.ReadingRouter extends Backbone.Router
 
-  initialize: -> 
-    
-    readingView= new App.ReadingView
-    readingsView = new App.ReadingsView(collection: App.ReadingsCollection)
-
+  initialize: (id) ->
+    inputView = new App.InputReadingView app: @
+    listView = new App.ListReadingView app: @
