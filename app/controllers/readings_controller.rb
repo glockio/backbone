@@ -1,5 +1,5 @@
 class ReadingsController < ApplicationController
-  # respond_to :json
+  
 
   def index
     @readings = Reading.all  

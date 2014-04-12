@@ -1,6 +1,6 @@
 class App.ReadingItemView extends Backbone.View 
   template: JST['templates/readingItem']
-
+  tagName: 'li'
 
 
   initialize: ->
@@ -9,8 +9,7 @@ class App.ReadingItemView extends Backbone.View
    
 
   render: ->
-    console.log @model
-    x= @$el.html @template @model.toJSON()
+    @$el.html @template @model.toJSON()
     console.log @model
     console.log "render function of Reading Item"
 
